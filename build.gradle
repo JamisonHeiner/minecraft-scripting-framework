@@ -10,6 +10,9 @@ plugins {
 
     // Apply the sonarqube plugin for static code analysis
     id "org.sonarqube" version "3.3"
+
+    // Apply the jacoco plugin for test coverage analysis
+    id "jacoco"
 }
 
 repositories {
@@ -41,6 +44,8 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }
+
+test.finalizedBy jacocoTestReport
 
 jar {
     archiveFileName = "${project.name}-${project.version}.jar"
