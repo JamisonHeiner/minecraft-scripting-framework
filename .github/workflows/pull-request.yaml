@@ -5,8 +5,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: Build
+  build-test-and-analyze:
+    name: Build, Test, and Analyze
     runs-on: ubuntu-latest
 
     steps:
