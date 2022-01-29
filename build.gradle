@@ -7,6 +7,9 @@ plugins {
 
     // Apply the lombok plugin to generate boilerplate code
     id "io.freefair.lombok" version "6.3.0"
+
+    // Apply the sonarqube plugin for static code analysis
+    id "org.sonarqube" version "3.3"
 }
 
 repositories {
@@ -29,6 +32,14 @@ dependencies {
     // Add Log4j 2 for logging.
     implementation "org.apache.logging.log4j:log4j-api:2.17.1"
     implementation "org.apache.logging.log4j:log4j-core:2.17.1"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "JamisonHeiner_minecraft-scripting-framework"
+        property "sonar.organization", "jamisonheiner"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 jar {
