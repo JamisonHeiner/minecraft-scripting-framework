@@ -49,6 +49,12 @@ tasks.named("sonarqube").configure {
     dependsOn test
 }
 
+jacocoTestReport {
+    reports {
+        // XML reports are required for integration with SonarQube
+        xml.required = true
+    }
+}
 test.finalizedBy jacocoTestReport
 
 jar {
