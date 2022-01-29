@@ -45,6 +45,10 @@ sonarqube {
     }
 }
 
+tasks.named("sonarqube").configure {
+    dependsOn test
+}
+
 test.finalizedBy jacocoTestReport
 
 jar {
