@@ -1,9 +1,6 @@
-name: Build
+name: Pull Request
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     types: [opened, synchronize, reopened]
 
