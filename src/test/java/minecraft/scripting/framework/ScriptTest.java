@@ -3,6 +3,171 @@
  */
 package minecraft.scripting.framework;
 
-class ScriptTest {
+import minecraft.scripting.framework.exception.EmptyScriptException;
+import minecraft.scripting.framework.step.Step;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Queue;
+
+import static minecraft.scripting.framework.TestUtils.queueOf;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class ScriptTest {
+    Script script;
+
+    @Mock Step firstStep, secondStep;
+
+    @Nested
+    class WhenThereAreNoSteps {
+        @Nested
+        class ShouldThrowExceptionWhenCreated {
+            @Test
+            void shouldThrowExceptionWhenCreatedWithNoSteps() {
+                // Given
+                Queue<Step> noSteps = queueOf();
+
+                // When + Then
+                assertThrows(EmptyScriptException.class, () -> new Script(noSteps));
+            }
+
+            @Test
+            void shouldThrowExceptionWhenCreatedWithNullQueueOfSteps() {
+                // When + Then
+                assertThrows(EmptyScriptException.class, () -> new Script(null));
+            }
+        }
+    }
+
+    @Nested
+    class WhenThereAreSteps {
+        @BeforeEach
+        void addStepsToScript() {
+            script = new Script(queueOf(firstStep, secondStep));
+        }
+
+        void completeStep(Step step) {
+            script.onTick();
+            when(step.isCompleted()).thenReturn(true);
+            clearInvocations(step);
+        }
+
+        @Nested
+        class WhenAllStepsAreCompleted {
+            @BeforeEach
+            void completeAllSteps() {
+                completeStep(firstStep);
+                completeStep(secondStep);
+            }
+
+            @Nested
+            class ShouldBeCompleted {
+                @Test
+                void shouldBeCompletedWhenAllStepsAreCompleted() {
+                    // When + Then
+                    assertTrue(script.isCompleted());
+                }
+            }
+
+            @Nested
+            class ShouldNotTickAnySteps {
+                @Test
+                void shouldNotTickAnyStepsWhenAllStepsAreCompleted() {
+                    // When
+                    script.onTick();
+
+                    // Then
+                    verify(firstStep, times(0)).onTick();
+                    verify(secondStep, times(0)).onTick();
+                }
+            }
+        }
+
+        @Nested
+        class WhenSomeStepsAreUncompleted {
+            @Nested
+            class ShouldBeUncompleted {
+                @Test
+                void shouldBeUncompletedWhenTheFirstStepIsUncompleted() {
+                    // When + Then
+                    assertFalse(script.isCompleted());
+                }
+
+                @Test
+                void shouldBeUncompletedWhenTheSecondStepIsUncompleted() {
+                    // Given
+                    completeStep(firstStep);
+
+                    // When + Then
+                    assertFalse(script.isCompleted());
+                }
+            }
+
+            @Nested
+            class ShouldTickTheCurrentStep {
+                @Test
+                void shouldTickTheFirstStepIfItIsTheCurrentStep() {
+                    // When
+                    script.onTick();
+
+                    // Then
+                    verify(firstStep).onTick();
+                }
+
+                @Test
+                void shouldTickTheSecondStepIfItIsTheCurrentStep() {
+                    // Given
+                    completeStep(firstStep);
+
+                    // When
+                    script.onTick();
+
+                    // Then
+                    verify(secondStep).onTick();
+                }
+            }
+
+            @Nested
+            class ShouldOnlyTickTheCurrentStep {
+                @Test
+                void shouldNotTickTheSecondStepIfItIsNotTheCurrentStep() {
+                    // When
+                    script.onTick();
+
+                    // Then
+                    verify(secondStep, times(0)).onTick();
+                }
+
+                @Test
+                void shouldNotTickTheFirstStepIfItIsNotTheCurrentStep() {
+                    // Given
+                    completeStep(firstStep);
+
+                    // When
+                    script.onTick();
+
+                    // Then
+                    verify(firstStep, times(0)).onTick();
+                }
+            }
+        }
+
+        @Nested
+        class ShouldThrowExceptionWhenCreatedWithANullStep {
+            @Test
+            void shouldThrowExceptionWhenCreatedWithANullStep() {
+                // Given
+                Queue<Step> justANullStep = queueOf((Step) null);
+
+                // When + Then
+                assertThrows(IllegalArgumentException.class, () -> new Script(justANullStep));
+            }
+        }
+    }
 }
