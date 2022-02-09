@@ -1,4 +1,4 @@
-package minecraft.scripting.framework.concept;
+package minecraft.scripting.framework.concept.tickable;
 
 /**
  * An interface that performs a small unit of work on each Minecraft tick.
