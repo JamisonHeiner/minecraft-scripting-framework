@@ -3,7 +3,6 @@ name: Publish artifact to GitHub Packages
 on:
   release:
     types: [created]
-  pull_request:
 
 jobs:
   publish:
