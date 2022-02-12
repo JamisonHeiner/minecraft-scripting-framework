@@ -18,7 +18,7 @@ class StepBuilderTest {
         stepBuilder = new StepBuilder();
 
         // When
-        Executable createStep = () -> stepBuilder.build();
+        Executable createStep = () -> stepBuilder.buildStep();
 
         // Then
         assertThrows(IncompleteStepException.class, createStep);

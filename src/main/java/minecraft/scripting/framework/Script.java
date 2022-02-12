@@ -24,10 +24,10 @@ import java.util.Queue;
 @Log4j2
 @ToString
 public class Script implements Step {
-    private final Queue<Step> remainingSteps;
+    private final Queue<? extends Step> remainingSteps;
     private Step currentStep;
 
-    public Script(Queue<Step> steps) {
+    public Script(Queue<? extends Step> steps) {
         ensureThereAreSteps(steps);
         ensureNoStepsAreNull(steps);
 
@@ -35,13 +35,13 @@ public class Script implements Step {
         currentStep = steps.poll();
     }
 
-    private void ensureThereAreSteps(Queue<Step> steps) {
+    private void ensureThereAreSteps(Queue<? extends Step> steps) {
         if (Objects.isNull(steps) || steps.isEmpty()) {
             throw new EmptyScriptException(this);
         }
     }
 
-    private void ensureNoStepsAreNull(Queue<Step> steps) {
+    private void ensureNoStepsAreNull(Queue<? extends Step> steps) {
         if (steps.stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException(String.format("Found a null Step while creating a Script. None of the Steps can be null! Steps: %s", steps));
         }
@@ -49,9 +49,9 @@ public class Script implements Step {
 
     @Override
     public void onTick() {
-        if (isCompleted()) return;
-
         while (theCurrentStepWasCompletedLastTick()) {
+            if (isCompleted()) return;
+
             log.info("The current step ({}) was completed last tick. Moving to the next step.", currentStep);
             moveToTheNextStep();
         }
