@@ -1,4 +1,4 @@
-package exception;
+package minecraft.scripting.framework.exception;
 
 import lombok.ToString;
 

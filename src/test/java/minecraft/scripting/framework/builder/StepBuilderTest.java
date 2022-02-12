@@ -1,8 +1,8 @@
 package minecraft.scripting.framework.builder;
 
-import exception.IncompleteStepException;
-import exception.IncompleteTickableException;
 import minecraft.scripting.framework.concept.Condition;
+import minecraft.scripting.framework.exception.IncompleteStepException;
+import minecraft.scripting.framework.exception.IncompleteTickableException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
