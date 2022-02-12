@@ -32,7 +32,7 @@ public class ScriptAcceptanceTest {
             jumpThreeTimes = new StepBuilder()
                 .should(jump).onTick()
                 .until(jumpedThreeTimes)
-                .build();
+                .buildStep();
 
             script = new ScriptBuilder()
                 .withStep(jumpThreeTimes)
@@ -84,14 +84,14 @@ public class ScriptAcceptanceTest {
             jumpThreeTimes = new StepBuilder()
                 .should(jump).onTick()
                 .until(jumpedThreeTimes)
-                .build();
+                .buildStep();
 
             attack = () -> ++numberOfAttacks;
             attackedThreeTimes = () -> numberOfAttacks >= 3;
             attackThreeTimes = new StepBuilder()
                 .should(attack).onTick()
                 .until(attackedThreeTimes)
-                .build();
+                .buildStep();
 
             script = new ScriptBuilder()
                 .withStep(jumpThreeTimes)
@@ -176,7 +176,7 @@ public class ScriptAcceptanceTest {
             jumpAndAttackThreeTimes = new StepBuilder()
                 .should(jump).and(attack).onTick()
                 .until(jumpedThreeTimes.and(attackedThreeTimes))
-                .build();
+                .buildStep();
 
             script = new ScriptBuilder()
                 .withStep(jumpAndAttackThreeTimes)
@@ -236,7 +236,7 @@ public class ScriptAcceptanceTest {
             jumpThreeTimes = new StepBuilder()
                 .when(onGround).should(jump).onTick()
                 .until(jumpedThreeTimes)
-                .build();
+                .buildStep();
 
             script = new ScriptBuilder()
                 .withStep(jumpThreeTimes)
@@ -315,7 +315,7 @@ public class ScriptAcceptanceTest {
                 .when(onGround).should(jump).onTick()
                 .should(attack).onTick()
                 .until(jumpedThreeTimes.and(attackedThreeTimes))
-                .build();
+                .buildStep();
 
             script = new ScriptBuilder()
                 .withStep(jumpAndAttackThreeTimes)

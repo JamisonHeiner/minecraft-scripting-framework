@@ -3,9 +3,12 @@ package minecraft.scripting.framework.builder;
 import exception.IncompleteStepException;
 import exception.IncompleteTickableException;
 import minecraft.scripting.framework.concept.Condition;
+import minecraft.scripting.framework.concept.Resettable;
 import minecraft.scripting.framework.concept.tickable.CompositeTickable;
 import minecraft.scripting.framework.concept.tickable.ConditionalTickable;
 import minecraft.scripting.framework.concept.tickable.Tickable;
+import minecraft.scripting.framework.step.InherentlyResettableStep;
+import minecraft.scripting.framework.step.ResettableStep;
 import minecraft.scripting.framework.step.Step;
 import minecraft.scripting.framework.step.TickDelegatingStep;
 
@@ -15,6 +18,7 @@ import java.util.Set;
 public class StepBuilder {
     private final Set<Tickable> tickables;
     private Condition completionCondition;
+    private Resettable resettable;
 
     public StepBuilder() {
         tickables = new HashSet<>();
@@ -33,12 +37,35 @@ public class StepBuilder {
         return this;
     }
 
-    public Step build() {
+    public StepBuilder should(Resettable resettable) {
+        this.resettable = resettable;
+        return this;
+    }
+
+    public StepBuilder whenReset() {
+        return this;
+    }
+
+    public Step buildStep() {
+        ensureThereAreTickables();
+
+        return new TickDelegatingStep(completionCondition, tickables);
+    }
+
+    private void ensureThereAreTickables() {
         if (tickables.isEmpty()) {
             throw new IncompleteStepException("Tried to create a Step with no Tickables.");
         }
+    }
 
-        return new TickDelegatingStep(completionCondition, tickables);
+    public ResettableStep buildResettableStep() {
+        ensureThereAreTickables();
+
+        if (resettable != null) {
+            return new ResettableStep(new TickDelegatingStep(completionCondition, tickables), resettable);
+        } else {
+            return new InherentlyResettableStep(new TickDelegatingStep(completionCondition, tickables));
+        }
     }
 
     public class TickableBuilder {
