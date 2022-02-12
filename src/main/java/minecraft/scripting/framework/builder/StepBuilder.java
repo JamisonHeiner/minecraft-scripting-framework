@@ -1,12 +1,12 @@
 package minecraft.scripting.framework.builder;
 
-import exception.IncompleteStepException;
-import exception.IncompleteTickableException;
 import minecraft.scripting.framework.concept.Condition;
 import minecraft.scripting.framework.concept.Resettable;
 import minecraft.scripting.framework.concept.tickable.CompositeTickable;
 import minecraft.scripting.framework.concept.tickable.ConditionalTickable;
 import minecraft.scripting.framework.concept.tickable.Tickable;
+import minecraft.scripting.framework.exception.IncompleteStepException;
+import minecraft.scripting.framework.exception.IncompleteTickableException;
 import minecraft.scripting.framework.step.InherentlyResettableStep;
 import minecraft.scripting.framework.step.ResettableStep;
 import minecraft.scripting.framework.step.Step;
